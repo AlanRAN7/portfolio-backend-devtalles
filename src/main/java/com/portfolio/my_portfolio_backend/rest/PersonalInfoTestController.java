@@ -3,9 +3,8 @@ package com.portfolio.my_portfolio_backend.rest;
 import com.portfolio.my_portfolio_backend.model.PersonalInfo;
 import com.portfolio.my_portfolio_backend.service.IPersonalInfoService;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -28,13 +27,20 @@ public class PersonalInfoTestController {
     }
 
     @GetMapping("/{id}")
-    public PersonalInfo getPersonalInfoById(Long id){
+    public PersonalInfo getPersonalInfoById(@PathVariable Long id){
         Optional<PersonalInfo> info = personalInfoService.findById(id);
         if (info.isPresent()){
             return info.get();
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Información personal no disponible en el ID: " + id);
         }
+    }
+
+    @PostMapping()
+    public ResponseEntity<PersonalInfo> createPersonalInfo(@RequestBody PersonalInfo personalInfo){
+        PersonalInfo newPersonalInfo = personalInfoService.save(personalInfo);
+        return new ResponseEntity<>(newPersonalInfo, HttpStatus.CREATED);
+
     }
 
 }
