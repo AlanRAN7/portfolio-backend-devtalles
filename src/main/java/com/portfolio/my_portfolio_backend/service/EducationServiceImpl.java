@@ -42,11 +42,11 @@ public class EducationServiceImpl  implements IEducationService{
 
     @Override
     public void deleteById(Long id) {
-
+    iEducationRepository.deleteById(id);
     }
 
     @Override
     public List<Education> findEducationByPersonalInfoId(Long personalInfoId) {
-        return List.of();
+        return iEducationRepository.findEducationByPersonalInfoId(personalInfoId);
     }
 }
