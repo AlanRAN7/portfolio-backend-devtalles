@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -23,10 +24,10 @@ public class EducationRepositoryImpl implements IEducationRepository{
         Education education = new Education();
         education.setId(result.getLong("id"));
         education.setDegree(result.getString("degree"));
-        education.setDescription(result.getString("description"));
         education.setInstitution(result.getString("institution"));
-        education.setStartDate(result.getDate("start_date").toLocalDate());
-        education.setEndDate(result.getDate("end_date").toLocalDate());
+        education.setStartDate(result.getObject("start_date", LocalDate.class));
+        education.setEndDate(result.getObject("end_date", LocalDate.class));
+        education.setDescription(result.getString("description"));
         education.setPersonalInfoId(result.getLong("personal_info_id"));
         return education;
     };
@@ -35,16 +36,16 @@ public class EducationRepositoryImpl implements IEducationRepository{
     @Override
     public List<Education> findAll() {
         String sql = "SELECT id, degree, institution, start_date, end_date, description personal_info_id"
-                + "FROM education";
+                + "FROM educations";
         return jdbcTemplate.query(sql, educationRowMapper);
     }
 
     @Override
     public Optional<Education> findById(Long id) {
         String sql = "SELECT id, degree, institution, start_date, end_date, description, personal_info_id"
-                + "FROM education WHERE id = ?";
+                + "FROM educations WHERE id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, educationRowMapper, id));
+            return Optional.of(jdbcTemplate.queryForObject(sql, educationRowMapper, id));
         } catch (EmptyResultDataAccessException e){
             return Optional.empty();
         }
@@ -53,7 +54,7 @@ public class EducationRepositoryImpl implements IEducationRepository{
     @Override
     public Education save(Education education) {
         if (education.getId() == null){
-            String sql = "INSERT INTO education(degree, institution, start_date, end_date, description, personal_info_id)" +
+            String sql = "INSERT INTO educations(degree, institution, start_date, end_date, description, personal_info_id)" +
                     "VALUES(?, ?, ?, ?, ?, ?)";
             KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -70,22 +71,29 @@ public class EducationRepositoryImpl implements IEducationRepository{
 
             education.setId(Objects.requireNonNull(keyHolder.getKey().longValue()));
         } else {
-            String sql = "UPDATE education SET degree = ?, institution = ?, start_date = ?, end_date = ?, description = ?, personal_info_id = ? WHERE id = ?";
-            jdbcTemplate.update(sql, education.getDegree(), education.getInstitution(), education.getStartDate(), education.getEndDate(), education.getDescription(), education.getPersonalInfoId());
+            String sql = "UPDATE educations SET degree = ?, institution = ?, start_date = ?, end_date = ?, description = ?, personal_info_id = ? WHERE id = ?";
+            jdbcTemplate.update(sql,
+                    education.getDegree(),
+                    education.getInstitution(),
+                    education.getStartDate(),
+                    education.getEndDate(),
+                    education.getDescription(),
+                    education.getPersonalInfoId(),
+                    education.getId());
         }
-        return null;
+        return education;
     }
 
     @Override
     public void deleteById(Long id) {
-        String sql = "DELETE FROM education WHERE id = ?";
+        String sql = "DELETE FROM educations WHERE id = ?";
         jdbcTemplate.update(sql, id);
 
     }
 
     @Override
     public List<Education> findEducationByPersonalInfoId(Long personalInfoId) {
-        String sql = "SELECT id, degree, institucion, start_date, end_date, description, personal_info_id FROM education WHERE personal_info_id = ?";
+        String sql = "SELECT id, degree, institucion, start_date, end_date, description, personal_info_id FROM educations WHERE personal_info_id = ?";
         return jdbcTemplate.query(sql, educationRowMapper, personalInfoId);
     }
 }
