@@ -35,15 +35,15 @@ public class EducationRepositoryImpl implements IEducationRepository{
 
     @Override
     public List<Education> findAll() {
-        String sql = "SELECT id, degree, institution, start_date, end_date, description personal_info_id"
-                + "FROM educations";
+        String sql = "SELECT id, degree, institution, start_date, end_date, description, personal_info_id "
+                + " FROM educations";
         return jdbcTemplate.query(sql, educationRowMapper);
     }
 
     @Override
     public Optional<Education> findById(Long id) {
-        String sql = "SELECT id, degree, institution, start_date, end_date, description, personal_info_id"
-                + "FROM educations WHERE id = ?";
+        String sql = "SELECT id, degree, institution, start_date, end_date, description, personal_info_id "
+                + " FROM educations WHERE id = ?";
         try {
             return Optional.of(jdbcTemplate.queryForObject(sql, educationRowMapper, id));
         } catch (EmptyResultDataAccessException e){
@@ -54,7 +54,7 @@ public class EducationRepositoryImpl implements IEducationRepository{
     @Override
     public Education save(Education education) {
         if (education.getId() == null){
-            String sql = "INSERT INTO educations(degree, institution, start_date, end_date, description, personal_info_id)" +
+            String sql = "INSERT INTO educations(degree, institution, start_date, end_date, description, personal_info_id) " +
                     "VALUES(?, ?, ?, ?, ?, ?)";
             KeyHolder keyHolder = new GeneratedKeyHolder();
 

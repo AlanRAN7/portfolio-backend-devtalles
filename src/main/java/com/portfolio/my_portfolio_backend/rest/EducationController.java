@@ -1,0 +1,46 @@
+package com.portfolio.my_portfolio_backend.rest;
+
+import com.portfolio.my_portfolio_backend.model.Education;
+import com.portfolio.my_portfolio_backend.service.IEducationService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/education")
+public class EducationController {
+    private final IEducationService educationService;
+
+    public EducationController(IEducationService educationService) {
+        this.educationService = educationService;
+    }
+
+    @GetMapping("/all")
+    public List<Education> getAllEducation(){
+        return educationService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Optional<Education> getEducationById(@PathVariable("id") Long id){
+        return educationService.findById(id);
+    }
+
+    @PostMapping
+    public Education save(@RequestBody Education education){
+        return educationService.save(education);
+    }
+
+    @PutMapping("/{id}")
+    public Education update (@PathVariable Long id, @RequestBody Education education){
+        education.setId(id);
+        return educationService.save(education);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id){
+        educationService.deleteById(id);
+    }
+}

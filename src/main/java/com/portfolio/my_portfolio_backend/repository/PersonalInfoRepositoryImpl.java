@@ -83,7 +83,7 @@ public class PersonalInfoRepositoryImpl implements IPersonalInfoRepository{
 */
         } else {
             String sql = "UPDATE personal_info SET first_name=?, last_name=?, title=?, profile_description=?, " +
-                    "profile_image_url=?, years_of_experience=?, email=?, phone=?, linkedin_url=?, github_url=?" +
+                    "profile_image_url=?, years_of_experience=?, email=?, phone=?, linkedin_url=?, github_url=? " +
                     "WHERE id=?";
             jdbcTemplate.update(sql,
                     personalInfo.getFirstName(),

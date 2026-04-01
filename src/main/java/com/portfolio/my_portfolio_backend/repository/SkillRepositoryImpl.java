@@ -34,7 +34,7 @@ public class SkillRepositoryImpl implements ISkillRepository {
     @Override
     public Skill save(Skill skill) {
         if (skill.getId() ==  null){
-            String sql = "INSERT INTO skill (name, level_percentage, icon_class, personal_info_id)" +
+            String sql = "INSERT INTO skills (name, level_percentage, icon_class, personal_info_id)" +
                     "VALUES(?, ?, ?, ?)";
 
             KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -51,12 +51,12 @@ public class SkillRepositoryImpl implements ISkillRepository {
             skill.setId(Objects.requireNonNull(keyHolder.getKey().longValue()));
         } else {
 
-            String sql = "UPDATE skill SET name = ?, level_percentage = ?, iconClass = ?, personal_info_id = ?  WHERE id = ?";
+            String sql = "UPDATE skills SET name = ?, level_percentage = ?, iconClass = ?, personal_info_id = ?  WHERE id = ?";
             jdbcTemplate.update(sql, skill.getName(), skill.getLevelPercentage(), skill.getIconClass(), skill.getPersonalInfoId(), skill.getId());
 
 
         }
-        return null;
+        return skill;
     }
 
     @Override

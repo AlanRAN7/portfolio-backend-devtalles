@@ -55,7 +55,7 @@ public class ExperienceRepositoryImpl implements IExperienceRepository{
     public Experience save(Experience experience) {
      if (experience.getId() == null){
          String sql = "INSERT INTO experiences(job_title, company_name, start_date, end_date, description, personal_info_id)" +
-                 "VALUES(?. ?, ?, ?, ?, ?)";
+                 " VALUES(?, ?, ?, ?, ?, ?)";
          KeyHolder keyHolder = new GeneratedKeyHolder();
          jdbcTemplate.update(con -> {
              PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
