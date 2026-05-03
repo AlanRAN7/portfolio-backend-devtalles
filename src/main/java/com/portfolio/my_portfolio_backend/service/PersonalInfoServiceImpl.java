@@ -1,5 +1,6 @@
 package com.portfolio.my_portfolio_backend.service;
 
+import com.portfolio.my_portfolio_backend.exception.ValidationException;
 import com.portfolio.my_portfolio_backend.model.PersonalInfo;
 import com.portfolio.my_portfolio_backend.repository.IPersonalInfoRepository;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,7 @@ public class PersonalInfoServiceImpl implements IPersonalInfoService {
         BindingResult result = new BeanPropertyBindingResult(personalInfo, "personalInfo");
         validator.validate(personalInfo, result);
         if (result.hasErrors()){
-            System.out.println("Errores de validación encontrados: " + result.getAllErrors());
-            throw new IllegalArgumentException("Errores: "+ result.getAllErrors());
+            throw new ValidationException(result);
         }
         return personalInfoRepository.save(personalInfo);
     }
