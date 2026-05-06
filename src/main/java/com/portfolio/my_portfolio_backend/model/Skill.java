@@ -23,6 +23,6 @@ private String name;
 private Integer levelPercentage;
 @NotBlank(message = "La clase del icono no puede estar vacía")
 private String iconClass;
-@NotBlank(message = "La skill debe de estar sujeto con una persona")
+
 private Long personalInfoId;
 }
